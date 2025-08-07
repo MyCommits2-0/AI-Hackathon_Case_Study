@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overdue Books - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .header-content-page {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .page-title-section h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-title-section p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .alert-urgent {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .alert-icon {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .summary-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .summary-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .summary-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .critical {
+        color: #dc3545;
+      }
+
+      .warning {
+        color: #ffc107;
+      }
+
+      .filters-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .filter-group input,
+      .filter-group select {
+        padding: 0.6rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group input:focus,
+      .filter-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .overdue-section {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        color: #333;
+      }
+
+      .results-info {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .overdue-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .overdue-table th,
+      .overdue-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .overdue-table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .overdue-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .overdue-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .book-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .book-title {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .book-author {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .member-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-name {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .member-id {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .overdue-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .overdue-critical {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .overdue-high {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .overdue-medium {
+        background: #ffeaa7;
+        color: #856404;
+      }
+
+      .fine-amount {
+        font-weight: 500;
+        font-size: 1.1rem;
+        color: #dc3545;
+      }
+
+      .actions-cell {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-small {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 3px;
+      }
+
+      .btn-collect {
+        background: #dc3545;
+        color: #fff;
+      }
+
+      .btn-collect:hover {
+        background: #c82333;
+      }
+
+      .priority-critical {
+        background: #fff5f5 !important;
+        border-left: 4px solid #dc3545;
+      }
+
+      .priority-high {
+        background: #fffbf0 !important;
+        border-left: 4px solid #ffc107;
+      }
+
+      @media (max-width: 768px) {
+        .overdue-table {
+          font-size: 0.9rem;
+        }
+
+        .overdue-table th,
+        .overdue-table td {
+          padding: 0.75rem 0.5rem;
+        }
+
+        .filters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .actions-cell {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="header-content-page">
+            <div class="page-title-section">
+              <h1>Overdue Books</h1>
+              <p>Track and manage books past their return due date</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-urgent">
+          <div class="alert-icon">🚨</div>
+          <div>
+            <strong>Urgent Action Required:</strong> 3 books are critically
+            overdue (15+ days). Please contact members immediately and collect
+            outstanding fines.
+          </div>
+        </div>
+
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-number critical">8</div>
+            <div class="summary-label">Total Overdue</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-number critical">3</div>
+            <div class="summary-label">Critical (15+ days)</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-number warning">5</div>
+            <div class="summary-label">High Priority (7+ days)</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-number">₹195</div>
+            <div class="summary-label">Total Fines Due</div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="priorityFilter">Priority Level</label>
+              <select id="priorityFilter">
+                <option value="all">All Overdue Books</option>
+                <option value="critical">Critical (15+ days)</option>
+                <option value="high">High (7-14 days)</option>
+                <option value="medium">Medium (1-6 days)</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="memberFilter">Member</label>
+              <input
+                type="text"
+                id="memberFilter"
+                placeholder="Search by member name or ID..."
+              />
+            </div>
+            <div class="filter-group">
+              <label for="bookFilter">Book</label>
+              <input
+                type="text"
+                id="bookFilter"
+                placeholder="Search by book title..."
+              />
+            </div>
+            <div class="filter-group">
+              <button class="btn" onclick="applyFilters()">
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="overdue-section">
+          <div class="section-header">
+            <h2>Overdue Books List</h2>
+            <span class="results-info">8 books overdue</span>
+          </div>
+
+          <table class="overdue-table">
+            <thead>
+              <tr>
+                <th>Book Details</th>
+                <th>Member</th>
+                <th>Copy ID</th>
+                <th>Due Date</th>
+                <th>Days Overdue</th>
+                <th>Priority</th>
+                <th>Fine Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="priority-critical">
+                <td class="book-info">
+                  <div class="book-title">
+                    Design Patterns: Elements of Reusable Object-Oriented
+                    Software
+                  </div>
+                  <div class="book-author">by Gang of Four</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Robert Johnson</div>
+                  <div class="member-id">LIB001025</div>
+                </td>
+                <td><strong>#007</strong></td>
+                <td>July 15, 2025</td>
+                <td style="color: #dc3545; font-weight: bold">19 days</td>
+                <td>
+                  <span class="overdue-badge overdue-critical">Critical</span>
+                </td>
+                <td class="fine-amount">₹95</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1025', 95)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1025')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-critical">
+                <td class="book-info">
+                  <div class="book-title">The Pragmatic Programmer</div>
+                  <div class="book-author">by Andrew Hunt & David Thomas</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Maria Garcia</div>
+                  <div class="member-id">LIB001087</div>
+                </td>
+                <td><strong>#003</strong></td>
+                <td>July 18, 2025</td>
+                <td style="color: #dc3545; font-weight: bold">16 days</td>
+                <td>
+                  <span class="overdue-badge overdue-critical">Critical</span>
+                </td>
+                <td class="fine-amount">₹80</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1087', 80)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1087')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-critical">
+                <td class="book-info">
+                  <div class="book-title">Code Complete</div>
+                  <div class="book-author">by Steve McConnell</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">David Wilson</div>
+                  <div class="member-id">LIB001156</div>
+                </td>
+                <td><strong>#002</strong></td>
+                <td>July 20, 2025</td>
+                <td style="color: #dc3545; font-weight: bold">14 days</td>
+                <td>
+                  <span class="overdue-badge overdue-critical">Critical</span>
+                </td>
+                <td class="fine-amount">₹70</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1156', 70)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1156')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-high">
+                <td class="book-info">
+                  <div class="book-title">
+                    Refactoring: Improving the Design of Existing Code
+                  </div>
+                  <div class="book-author">by Martin Fowler</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Sarah Brown</div>
+                  <div class="member-id">LIB001298</div>
+                </td>
+                <td><strong>#001</strong></td>
+                <td>July 25, 2025</td>
+                <td style="color: #ffc107; font-weight: bold">9 days</td>
+                <td><span class="overdue-badge overdue-high">High</span></td>
+                <td class="fine-amount">₹45</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1298', 45)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1298')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-high">
+                <td class="book-info">
+                  <div class="book-title">
+                    You Don't Know JS: Scope & Closures
+                  </div>
+                  <div class="book-author">by Kyle Simpson</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Michael Davis</div>
+                  <div class="member-id">LIB001345</div>
+                </td>
+                <td><strong>#004</strong></td>
+                <td>July 27, 2025</td>
+                <td style="color: #ffc107; font-weight: bold">7 days</td>
+                <td><span class="overdue-badge overdue-high">High</span></td>
+                <td class="fine-amount">₹35</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1345', 35)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1345')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">Clean Architecture</div>
+                  <div class="book-author">by Robert C. Martin</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Emma Wilson</div>
+                  <div class="member-id">LIB001456</div>
+                </td>
+                <td><strong>#005</strong></td>
+                <td>July 30, 2025</td>
+                <td style="color: #856404">4 days</td>
+                <td>
+                  <span class="overdue-badge overdue-medium">Medium</span>
+                </td>
+                <td class="fine-amount">₹20</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1456', 20)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1456')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">Effective Java</div>
+                  <div class="book-author">by Joshua Bloch</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">James Anderson</div>
+                  <div class="member-id">LIB001567</div>
+                </td>
+                <td><strong>#006</strong></td>
+                <td>August 1, 2025</td>
+                <td style="color: #856404">2 days</td>
+                <td>
+                  <span class="overdue-badge overdue-medium">Medium</span>
+                </td>
+                <td class="fine-amount">₹10</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1567', 10)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1567')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">Spring in Action</div>
+                  <div class="book-author">by Craig Walls</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Lisa Thompson</div>
+                  <div class="member-id">LIB001678</div>
+                </td>
+                <td><strong>#008</strong></td>
+                <td>August 2, 2025</td>
+                <td style="color: #856404">1 day</td>
+                <td>
+                  <span class="overdue-badge overdue-medium">Medium</span>
+                </td>
+                <td class="fine-amount">₹5</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectFine('1678', 5)"
+                  >
+                    Collect Fine
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="contactMember('1678')"
+                  >
+                    Contact
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function applyFilters() {
+        const priorityFilter = document.getElementById("priorityFilter").value;
+        const memberFilter = document.getElementById("memberFilter").value;
+        const bookFilter = document.getElementById("bookFilter").value;
+
+        console.log("Applying filters:", {
+          priorityFilter,
+          memberFilter,
+          bookFilter,
+        });
+        alert(
+          "Filters applied! Results would be updated.\n(Backend integration required)"
+        );
+      }
+
+      function collectFine(memberId, amount) {
+        console.log("Collect fine:", { memberId, amount });
+        if (confirm(`Collect fine of ₹${amount} from member ${memberId}?`)) {
+          alert(
+            `Fine collection process initiated for ₹${amount}\n(Backend integration required)`
+          );
+        }
+      }
+
+      function contactMember(memberId) {
+        console.log("Contact member:", memberId);
+        if (confirm(`Send overdue notice to member ${memberId}?`)) {
+          alert(
+            `Overdue notice sent to member ${memberId}\n(Backend integration required)`
+          );
+        }
+      }
+
+      // Auto-refresh every 5 minutes to update overdue status
+      setInterval(function () {
+        console.log("Refreshing overdue status...");
+        // This would update the overdue days and fine amounts in real implementation
+      }, 300000);
+    </script>
+  </body>
+</html>

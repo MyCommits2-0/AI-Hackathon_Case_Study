@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Reports - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .page-title-section h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-title-section p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .revenue-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .revenue-card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .revenue-amount {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .revenue-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+
+      .revenue-change {
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .positive {
+        color: #28a745;
+      }
+
+      .negative {
+        color: #dc3545;
+      }
+
+      .filters-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .filter-group input,
+      .filter-group select {
+        padding: 0.6rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group input:focus,
+      .filter-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .reports-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .daily-collections {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        color: #333;
+      }
+
+      .export-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-small {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 3px;
+      }
+
+      .collections-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .collections-table th,
+      .collections-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .collections-table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .collections-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .collections-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .amount-cell {
+        font-weight: 500;
+        text-align: right;
+      }
+
+      .fee-amount {
+        color: #28a745;
+      }
+
+      .fine-amount {
+        color: #dc3545;
+      }
+
+      .total-amount {
+        font-weight: bold;
+        color: #333;
+      }
+
+      .summary-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .quick-stats {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .quick-stats h3 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e9ecef;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .stat-label {
+        color: #666;
+      }
+
+      .stat-value {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .payment-breakdown {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .payment-breakdown h3 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .breakdown-chart {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .breakdown-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .breakdown-bar {
+        flex: 1;
+        height: 30px;
+        background: #e9ecef;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .breakdown-fill {
+        height: 100%;
+        border-radius: 15px;
+        transition: width 0.3s ease;
+      }
+
+      .fee-fill {
+        background: linear-gradient(90deg, #28a745, #34ce57);
+      }
+
+      .fine-fill {
+        background: linear-gradient(90deg, #dc3545, #e74c61);
+      }
+
+      .breakdown-text {
+        position: absolute;
+        top: 50%;
+        left: 1rem;
+        transform: translateY(-50%);
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #fff;
+      }
+
+      .breakdown-value {
+        min-width: 80px;
+        text-align: right;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .recent-transactions {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .transaction-list {
+        padding: 0;
+      }
+
+      .transaction-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .transaction-item:last-child {
+        border-bottom: none;
+      }
+
+      .transaction-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .transaction-member {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .transaction-details {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .transaction-amount {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+      }
+
+      .amount-value {
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+      }
+
+      .amount-time {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      @media (max-width: 768px) {
+        .reports-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .export-buttons {
+          flex-direction: column;
+        }
+
+        .breakdown-item {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="page-title-section">
+            <h1>Payment Reports</h1>
+            <p>
+              Comprehensive revenue and collection analytics for library
+              operations
+            </p>
+          </div>
+        </div>
+
+        <div class="revenue-overview">
+          <div class="revenue-card">
+            <div class="revenue-amount">₹18,450</div>
+            <div class="revenue-label">Total Revenue (This Month)</div>
+            <div class="revenue-change positive">+15.2% from last month</div>
+          </div>
+          <div class="revenue-card">
+            <div class="revenue-amount">₹15,500</div>
+            <div class="revenue-label">Membership Fees</div>
+            <div class="revenue-change positive">+8.5% from last month</div>
+          </div>
+          <div class="revenue-card">
+            <div class="revenue-amount">₹2,950</div>
+            <div class="revenue-label">Fine Collections</div>
+            <div class="revenue-change positive">+45.3% from last month</div>
+          </div>
+          <div class="revenue-card">
+            <div class="revenue-amount">31</div>
+            <div class="revenue-label">Fee Paying Members</div>
+            <div class="revenue-change positive">+2 from last month</div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="dateFrom">From Date</label>
+              <input type="date" id="dateFrom" value="2025-08-01" />
+            </div>
+            <div class="filter-group">
+              <label for="dateTo">To Date</label>
+              <input type="date" id="dateTo" value="2025-08-03" />
+            </div>
+            <div class="filter-group">
+              <label for="paymentType">Payment Type</label>
+              <select id="paymentType">
+                <option value="all">All Payments</option>
+                <option value="fee">Membership Fees</option>
+                <option value="fine">Fines Only</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="reportType">Report Type</label>
+              <select id="reportType">
+                <option value="daily">Daily Summary</option>
+                <option value="weekly">Weekly Summary</option>
+                <option value="monthly">Monthly Summary</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <button class="btn" onclick="generateReport()">
+                Generate Report
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="reports-grid">
+          <div class="daily-collections">
+            <div class="section-header">
+              <h2>Daily Collections</h2>
+              <div class="export-buttons">
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="exportToPDF()"
+                >
+                  Export PDF
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="exportToExcel()"
+                >
+                  Export Excel
+                </button>
+              </div>
+            </div>
+
+            <table class="collections-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Membership Fees</th>
+                  <th>Fine Collections</th>
+                  <th>Total Collections</th>
+                  <th>Transactions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Aug 3, 2025</td>
+                  <td class="amount-cell fee-amount">₹2,500</td>
+                  <td class="amount-cell fine-amount">₹185</td>
+                  <td class="amount-cell total-amount">₹2,685</td>
+                  <td>8</td>
+                </tr>
+                <tr>
+                  <td>Aug 2, 2025</td>
+                  <td class="amount-cell fee-amount">₹3,000</td>
+                  <td class="amount-cell fine-amount">₹95</td>
+                  <td class="amount-cell total-amount">₹3,095</td>
+                  <td>12</td>
+                </tr>
+                <tr>
+                  <td>Aug 1, 2025</td>
+                  <td class="amount-cell fee-amount">₹2,000</td>
+                  <td class="amount-cell fine-amount">₹140</td>
+                  <td class="amount-cell total-amount">₹2,140</td>
+                  <td>9</td>
+                </tr>
+                <tr>
+                  <td>Jul 31, 2025</td>
+                  <td class="amount-cell fee-amount">₹1,500</td>
+                  <td class="amount-cell fine-amount">₹75</td>
+                  <td class="amount-cell total-amount">₹1,575</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Jul 30, 2025</td>
+                  <td class="amount-cell fee-amount">₹3,500</td>
+                  <td class="amount-cell fine-amount">₹250</td>
+                  <td class="amount-cell total-amount">₹3,750</td>
+                  <td>15</td>
+                </tr>
+                <tr style="background: #f8f9fa; font-weight: bold">
+                  <td><strong>Total (Last 5 Days)</strong></td>
+                  <td class="amount-cell fee-amount">
+                    <strong>₹12,500</strong>
+                  </td>
+                  <td class="amount-cell fine-amount"><strong>₹745</strong></td>
+                  <td class="amount-cell total-amount">
+                    <strong>₹13,245</strong>
+                  </td>
+                  <td><strong>50</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="summary-panel">
+            <div class="quick-stats">
+              <h3>Quick Statistics</h3>
+              <div class="stat-item">
+                <span class="stat-label">Average Daily Collection:</span>
+                <span class="stat-value">₹2,649</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Peak Collection Day:</span>
+                <span class="stat-value">Jul 30 (₹3,750)</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Average Transaction Value:</span>
+                <span class="stat-value">₹265</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Outstanding Dues:</span>
+                <span class="stat-value">₹1,240</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Collection Efficiency:</span>
+                <span class="stat-value">91.4%</span>
+              </div>
+            </div>
+
+            <div class="payment-breakdown">
+              <h3>Payment Type Breakdown</h3>
+              <div class="breakdown-chart">
+                <div class="breakdown-item">
+                  <div class="breakdown-bar">
+                    <div class="breakdown-fill fee-fill" style="width: 84.1%">
+                      <div class="breakdown-text">Membership Fees</div>
+                    </div>
+                  </div>
+                  <div class="breakdown-value">₹12,500</div>
+                </div>
+                <div class="breakdown-item">
+                  <div class="breakdown-bar">
+                    <div class="breakdown-fill fine-fill" style="width: 15.9%">
+                      <div class="breakdown-text">Fines</div>
+                    </div>
+                  </div>
+                  <div class="breakdown-value">₹745</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-transactions">
+          <div class="section-header">
+            <h2>Recent Transactions</h2>
+            <span style="color: #666; font-size: 0.9rem">Last 10 payments</span>
+          </div>
+
+          <div class="transaction-list">
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <div class="transaction-member">Robert Johnson (LIB001025)</div>
+                <div class="transaction-details">
+                  Monthly Fee + Fine (Receipt: RCP202508030001)
+                </div>
+              </div>
+              <div class="transaction-amount">
+                <div class="amount-value total-amount">₹640</div>
+                <div class="amount-time">10:45 AM</div>
+              </div>
+            </div>
+
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <div class="transaction-member">Maria Garcia (LIB001087)</div>
+                <div class="transaction-details">
+                  Fine Payment (Receipt: RCP202508030002)
+                </div>
+              </div>
+              <div class="transaction-amount">
+                <div class="amount-value fine-amount">₹80</div>
+                <div class="amount-time">10:20 AM</div>
+              </div>
+            </div>
+
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <div class="transaction-member">Sarah Brown (LIB001298)</div>
+                <div class="transaction-details">
+                  Monthly Fee (Receipt: RCP202508030003)
+                </div>
+              </div>
+              <div class="transaction-amount">
+                <div class="amount-value fee-amount">₹500</div>
+                <div class="amount-time">09:55 AM</div>
+              </div>
+            </div>
+
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <div class="transaction-member">David Wilson (LIB001156)</div>
+                <div class="transaction-details">
+                  Monthly Fee (Receipt: RCP202508020015)
+                </div>
+              </div>
+              <div class="transaction-amount">
+                <div class="amount-value fee-amount">₹500</div>
+                <div class="amount-time">Yesterday 4:30 PM</div>
+              </div>
+            </div>
+
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <div class="transaction-member">Emma Wilson (LIB001456)</div>
+                <div class="transaction-details">
+                  Fine Payment (Receipt: RCP202508020014)
+                </div>
+              </div>
+              <div class="transaction-amount">
+                <div class="amount-value fine-amount">₹45</div>
+                <div class="amount-time">Yesterday 3:15 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function generateReport() {
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+        const paymentType = document.getElementById("paymentType").value;
+        const reportType = document.getElementById("reportType").value;
+
+        console.log("Generating report:", {
+          dateFrom,
+          dateTo,
+          paymentType,
+          reportType,
+        });
+        alert(
+          "Report generated successfully!\nFilters applied and data updated.\n(Backend integration required)"
+        );
+      }
+
+      function exportToPDF() {
+        console.log("Exporting to PDF");
+        alert(
+          "PDF export initiated!\nReport will be downloaded shortly.\n(Backend integration required)"
+        );
+      }
+
+      function exportToExcel() {
+        console.log("Exporting to Excel");
+        alert(
+          "Excel export initiated!\nReport will be downloaded shortly.\n(Backend integration required)"
+        );
+      }
+
+      // Auto-refresh data every 5 minutes
+      setInterval(function () {
+        console.log("Refreshing payment data...");
+        // This would update the payment statistics in real implementation
+      }, 300000);
+    </script>
+  </body>
+</html>

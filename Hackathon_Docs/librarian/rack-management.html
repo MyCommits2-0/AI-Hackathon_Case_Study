@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rack Management - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-header p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .rack-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .overview-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .overview-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .overview-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .tools-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .tools-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .tools-header h2 {
+        color: #333;
+      }
+
+      .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .tool-card {
+        padding: 1rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .tool-card:hover {
+        border-color: #333;
+        background: #f8f9fa;
+      }
+
+      .tool-card h3 {
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-size: 1rem;
+      }
+
+      .tool-card p {
+        color: #666;
+        font-size: 0.8rem;
+      }
+
+      .racks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .rack-card {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .rack-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .rack-header {
+        background: #333;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .rack-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .rack-capacity {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .rack-body {
+        padding: 1.5rem;
+      }
+
+      .rack-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+      }
+
+      .total {
+        color: #333;
+      }
+
+      .available {
+        color: #28a745;
+      }
+
+      .issued {
+        color: #dc3545;
+      }
+
+      .utilization-bar {
+        background: #e9ecef;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .utilization-fill {
+        height: 100%;
+        transition: width 0.3s ease;
+      }
+
+      .util-low {
+        background: #28a745;
+      }
+
+      .util-medium {
+        background: #ffc107;
+      }
+
+      .util-high {
+        background: #dc3545;
+      }
+
+      .utilization-text {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .rack-subjects {
+        margin-bottom: 1.5rem;
+      }
+
+      .rack-subjects h4 {
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .subject-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .subject-tag {
+        padding: 0.2rem 0.5rem;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        color: #333;
+      }
+
+      .rack-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid #333;
+        background: transparent;
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.8rem;
+        display: inline-block;
+      }
+
+      .btn:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .btn-primary {
+        background: #333;
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: #555;
+      }
+
+      @media (max-width: 768px) {
+        .racks-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .tools-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .rack-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .rack-actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Rack Management</h1>
+          <p>Organize and manage book placement across library racks</p>
+        </div>
+
+        <div class="rack-overview">
+          <div class="overview-card">
+            <div class="overview-number">8</div>
+            <div class="overview-label">Total Racks</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-number">456</div>
+            <div class="overview-label">Total Copies</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-number">158</div>
+            <div class="overview-label">Available</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-number">89</div>
+            <div class="overview-label">Currently Issued</div>
+          </div>
+          <div class="overview-card">
+            <div class="overview-number">75%</div>
+            <div class="overview-label">Avg Utilization</div>
+          </div>
+        </div>
+
+        <div class="tools-section">
+          <div class="tools-header">
+            <h2>Rack Management Tools</h2>
+          </div>
+          <div class="tools-grid">
+            <a href="#" class="tool-card" onclick="bulkRelocate()">
+              <h3>Bulk Relocate</h3>
+              <p>Move multiple copies between racks</p>
+            </a>
+            <a href="#" class="tool-card" onclick="optimizeRacks()">
+              <h3>Optimize Layout</h3>
+              <p>Auto-organize by subject or frequency</p>
+            </a>
+            <a href="#" class="tool-card" onclick="generateLabels()">
+              <h3>Generate Labels</h3>
+              <p>Print rack and shelf labels</p>
+            </a>
+            <a href="#" class="tool-card" onclick="auditInventory()">
+              <h3>Inventory Audit</h3>
+              <p>Verify physical vs system records</p>
+            </a>
+          </div>
+        </div>
+
+        <div class="racks-grid">
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 1</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">65</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">42</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">23</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div
+                  class="utilization-fill util-high"
+                  style="width: 81%"
+                ></div>
+              </div>
+              <div class="utilization-text">81% Utilized (15 spaces left)</div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Programming (25)</span>
+                  <span class="subject-tag">Science (20)</span>
+                  <span class="subject-tag">Mathematics (15)</span>
+                  <span class="subject-tag">Other (5)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn" onclick="viewRackDetails(1)">
+                  View Details
+                </button>
+                <button class="btn" onclick="reorganizeRack(1)">
+                  Reorganize
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 2</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">58</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">35</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">23</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div
+                  class="utilization-fill util-medium"
+                  style="width: 72%"
+                ></div>
+              </div>
+              <div class="utilization-text">72% Utilized (22 spaces left)</div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Programming (30)</span>
+                  <span class="subject-tag">Business (15)</span>
+                  <span class="subject-tag">Arts (13)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn" onclick="viewRackDetails(2)">
+                  View Details
+                </button>
+                <button class="btn" onclick="reorganizeRack(2)">
+                  Reorganize
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 3</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">45</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">28</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">17</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div
+                  class="utilization-fill util-medium"
+                  style="width: 56%"
+                ></div>
+              </div>
+              <div class="utilization-text">56% Utilized (35 spaces left)</div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Literature (25)</span>
+                  <span class="subject-tag">History (12)</span>
+                  <span class="subject-tag">Philosophy (8)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn" onclick="viewRackDetails(3)">
+                  View Details
+                </button>
+                <button class="btn" onclick="reorganizeRack(3)">
+                  Reorganize
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 4</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">32</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">20</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">12</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div class="utilization-fill util-low" style="width: 40%"></div>
+              </div>
+              <div class="utilization-text">
+                40% Utilized (48 spaces available)
+              </div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Science (18)</span>
+                  <span class="subject-tag">Mathematics (10)</span>
+                  <span class="subject-tag">Other (4)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn btn-primary" onclick="addBooksToRack(4)">
+                  Add Books
+                </button>
+                <button class="btn" onclick="viewRackDetails(4)">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 5</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">70</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">45</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">25</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div
+                  class="utilization-fill util-high"
+                  style="width: 87%"
+                ></div>
+              </div>
+              <div class="utilization-text">87% Utilized (10 spaces left)</div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Business (35)</span>
+                  <span class="subject-tag">Economics (20)</span>
+                  <span class="subject-tag">Management (15)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn" onclick="viewRackDetails(5)">
+                  View Details
+                </button>
+                <button class="btn" onclick="reorganizeRack(5)">
+                  Reorganize
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rack-card">
+            <div class="rack-header">
+              <div class="rack-title">Rack 6</div>
+              <div class="rack-capacity">Capacity: 80 books</div>
+            </div>
+            <div class="rack-body">
+              <div class="rack-stats">
+                <div class="stat-item">
+                  <div class="stat-number total">28</div>
+                  <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number available">18</div>
+                  <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number issued">10</div>
+                  <div class="stat-label">Issued</div>
+                </div>
+              </div>
+
+              <div class="utilization-bar">
+                <div class="utilization-fill util-low" style="width: 35%"></div>
+              </div>
+              <div class="utilization-text">
+                35% Utilized (52 spaces available)
+              </div>
+
+              <div class="rack-subjects">
+                <h4>Primary Subjects:</h4>
+                <div class="subject-tags">
+                  <span class="subject-tag">Arts (15)</span>
+                  <span class="subject-tag">Music (8)</span>
+                  <span class="subject-tag">Other (5)</span>
+                </div>
+              </div>
+
+              <div class="rack-actions">
+                <button class="btn btn-primary" onclick="addBooksToRack(6)">
+                  Add Books
+                </button>
+                <button class="btn" onclick="viewRackDetails(6)">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function viewRackDetails(rackNumber) {
+        console.log("View details for rack:", rackNumber);
+        alert(
+          `Opening detailed view for Rack ${rackNumber}\n(Backend integration required)`
+        );
+      }
+
+      function reorganizeRack(rackNumber) {
+        console.log("Reorganize rack:", rackNumber);
+        alert(
+          `Opening reorganization tool for Rack ${rackNumber}\n(Backend integration required)`
+        );
+      }
+
+      function addBooksToRack(rackNumber) {
+        console.log("Add books to rack:", rackNumber);
+        alert(
+          `Opening book selection for Rack ${rackNumber}\n(Backend integration required)`
+        );
+      }
+
+      function bulkRelocate() {
+        console.log("Bulk relocate tool");
+        alert("Opening bulk relocation tool\n(Backend integration required)");
+      }
+
+      function optimizeRacks() {
+        console.log("Optimize racks");
+        alert(
+          "Starting rack optimization process\n(Backend integration required)"
+        );
+      }
+
+      function generateLabels() {
+        console.log("Generate labels");
+        alert(
+          "Generating printable rack labels\n(Backend integration required)"
+        );
+      }
+
+      function auditInventory() {
+        console.log("Audit inventory");
+        alert(
+          "Starting inventory audit process\n(Backend integration required)"
+        );
+      }
+    </script>
+  </body>
+</html>

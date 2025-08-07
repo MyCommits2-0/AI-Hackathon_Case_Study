@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Copies Management - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .book-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+      }
+
+      .book-details h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 0.3rem;
+      }
+
+      .book-details .author {
+        color: #666;
+        font-style: italic;
+        margin-bottom: 0.5rem;
+      }
+
+      .book-details .meta {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .summary-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+      }
+
+      .summary-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.3rem;
+      }
+
+      .summary-label {
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      .available {
+        color: #28a745;
+      }
+
+      .issued {
+        color: #dc3545;
+      }
+
+      .filters-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .filter-group select {
+        padding: 0.6rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .copies-section {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        color: #333;
+      }
+
+      .copies-grid {
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .copy-card {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .copy-card.available {
+        border-color: #28a745;
+        background: #f8fff8;
+      }
+
+      .copy-card.issued {
+        border-color: #dc3545;
+        background: #fff8f8;
+      }
+
+      .copy-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .copy-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .copy-id {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .copy-status {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .status-available {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-issued {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .copy-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.2rem;
+      }
+
+      .detail-value {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .issue-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .copy-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+
+      .btn-small {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 3px;
+      }
+
+      @media (max-width: 768px) {
+        .book-info {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .header-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .copies-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .copy-details {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="books-catalog.html" class="back-link">← Back to Catalog</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="book-info">
+            <div class="book-details">
+              <h1>Clean Code: A Handbook of Agile Software Craftsmanship</h1>
+              <div class="author">by Robert C. Martin</div>
+              <div class="meta">
+                Book ID: #001 | Subject: Programming | ISBN: 978-0132350884
+              </div>
+            </div>
+            <div class="header-actions">
+              <a href="add-book-copy.html?bookId=1" class="btn"
+                >+ Add New Copy</a
+              >
+              <a href="edit-book.html?bookId=1" class="btn btn-secondary"
+                >Edit Book Info</a
+              >
+            </div>
+          </div>
+
+          <div class="summary-cards">
+            <div class="summary-card">
+              <div class="summary-number">5</div>
+              <div class="summary-label">Total Copies</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-number available">3</div>
+              <div class="summary-label">Available</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-number issued">2</div>
+              <div class="summary-label">Currently Issued</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-number">₹2,499</div>
+              <div class="summary-label">Book Price</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="statusFilter">Filter by Status</label>
+              <select id="statusFilter">
+                <option value="all">All Copies</option>
+                <option value="available">Available Only</option>
+                <option value="issued">Issued Only</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="rackFilter">Filter by Rack</label>
+              <select id="rackFilter">
+                <option value="all">All Racks</option>
+                <option value="1">Rack 1</option>
+                <option value="2">Rack 2</option>
+                <option value="3">Rack 3</option>
+                <option value="4">Rack 4</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <button class="btn" onclick="applyFilters()">
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="copies-section">
+          <div class="section-header">
+            <h2>Individual Copies</h2>
+            <span>5 total copies</span>
+          </div>
+
+          <div class="copies-grid">
+            <div class="copy-card available">
+              <div class="copy-header">
+                <div class="copy-id">Copy #001</div>
+                <div class="copy-status status-available">Available</div>
+              </div>
+
+              <div class="copy-details">
+                <div class="detail-item">
+                  <span class="detail-label">Rack Location</span>
+                  <span class="detail-value">Rack 2</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Condition</span>
+                  <span class="detail-value">Good</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Added Date</span>
+                  <span class="detail-value">Jan 15, 2023</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Last Borrowed</span>
+                  <span class="detail-value">Jul 10, 2025</span>
+                </div>
+              </div>
+
+              <div class="copy-actions">
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="relocateCopy('001')"
+                >
+                  Relocate
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="editCopy('001')"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="issueCopy('001')"
+                >
+                  Issue
+                </button>
+              </div>
+            </div>
+
+            <div class="copy-card available">
+              <div class="copy-header">
+                <div class="copy-id">Copy #002</div>
+                <div class="copy-status status-available">Available</div>
+              </div>
+
+              <div class="copy-details">
+                <div class="detail-item">
+                  <span class="detail-label">Rack Location</span>
+                  <span class="detail-value">Rack 2</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Condition</span>
+                  <span class="detail-value">Excellent</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Added Date</span>
+                  <span class="detail-value">Jan 15, 2023</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Last Borrowed</span>
+                  <span class="detail-value">Never</span>
+                </div>
+              </div>
+
+              <div class="copy-actions">
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="relocateCopy('002')"
+                >
+                  Relocate
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="editCopy('002')"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="issueCopy('002')"
+                >
+                  Issue
+                </button>
+              </div>
+            </div>
+
+            <div class="copy-card available">
+              <div class="copy-header">
+                <div class="copy-id">Copy #003</div>
+                <div class="copy-status status-available">Available</div>
+              </div>
+
+              <div class="copy-details">
+                <div class="detail-item">
+                  <span class="detail-label">Rack Location</span>
+                  <span class="detail-value">Rack 2</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Condition</span>
+                  <span class="detail-value">Good</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Added Date</span>
+                  <span class="detail-value">Mar 10, 2024</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Last Borrowed</span>
+                  <span class="detail-value">Jun 5, 2025</span>
+                </div>
+              </div>
+
+              <div class="copy-actions">
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="relocateCopy('003')"
+                >
+                  Relocate
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="editCopy('003')"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-secondary btn-small"
+                  onclick="issueCopy('003')"
+                >
+                  Issue
+                </button>
+              </div>
+            </div>
+
+            <div class="copy-card issued">
+              <div class="copy-header">
+                <div class="copy-id">Copy #004</div>
+                <div class="copy-status status-issued">Issued</div>
+              </div>
+
+              <div class="copy-details">
+                <div class="detail-item">
+                  <span class="detail-label">Issued To</span>
+                  <span class="detail-value">John Doe (LIB001234)</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Issue Date</span>
+                  <span class="detail-value">Aug 3, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Due Date</span>
+                  <span class="detail-value">Aug 10, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Days Remaining</span>
+                  <span class="detail-value">7 days</span>
+                </div>
+              </div>
+
+              <div class="issue-info">
+                Currently issued to member. Return processing available from
+                Issue History page.
+              </div>
+            </div>
+
+            <div class="copy-card issued">
+              <div class="copy-header">
+                <div class="copy-id">Copy #005</div>
+                <div class="copy-status status-issued">Issued</div>
+              </div>
+
+              <div class="copy-details">
+                <div class="detail-item">
+                  <span class="detail-label">Issued To</span>
+                  <span class="detail-value">Alice Smith (LIB001235)</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Issue Date</span>
+                  <span class="detail-value">Jul 29, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Due Date</span>
+                  <span class="detail-value">Aug 5, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Days Remaining</span>
+                  <span class="detail-value" style="color: #ffc107"
+                    >2 days</span
+                  >
+                </div>
+              </div>
+
+              <div class="issue-info">
+                Due soon! Consider sending reminder to member.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function applyFilters() {
+        const statusFilter = document.getElementById("statusFilter").value;
+        const rackFilter = document.getElementById("rackFilter").value;
+
+        console.log("Applying filters:", { statusFilter, rackFilter });
+        alert(
+          "Filters applied! Results would be updated.\n(Backend integration required)"
+        );
+      }
+
+      function relocateCopy(copyId) {
+        const newRack = prompt(
+          "Enter new rack location for Copy #" + copyId + ":"
+        );
+        if (newRack) {
+          console.log("Relocate copy", copyId, "to rack", newRack);
+          alert(
+            `Copy #${copyId} relocated to Rack ${newRack}\n(Backend integration required)`
+          );
+        }
+      }
+
+      function editCopy(copyId) {
+        console.log("Edit copy:", copyId);
+        alert(
+          `Opening edit form for Copy #${copyId}\n(Backend integration required)`
+        );
+      }
+
+      function issueCopy(copyId) {
+        const memberId = prompt(
+          "Enter member ID to issue Copy #" + copyId + " to:"
+        );
+        if (memberId) {
+          console.log("Issue copy", copyId, "to member", memberId);
+          alert(
+            `Copy #${copyId} issued to member ${memberId}\n(Backend integration required)`
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

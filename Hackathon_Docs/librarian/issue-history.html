@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Issue History - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .page-title-section h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-title-section p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .current {
+        color: #007bff;
+      }
+
+      .returned {
+        color: #28a745;
+      }
+
+      .overdue {
+        color: #dc3545;
+      }
+
+      .filters-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .filter-group input,
+      .filter-group select {
+        padding: 0.6rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group input:focus,
+      .filter-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .history-section {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        color: #333;
+      }
+
+      .results-info {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .history-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .history-table th,
+      .history-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .history-table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .history-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .history-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .book-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .book-title {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .book-author {
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .member-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-name {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .member-id {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .status-current {
+        background: #cce5ff;
+        color: #004085;
+      }
+
+      .status-returned {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-overdue-returned {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .date-cell {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .fine-amount {
+        font-weight: 500;
+      }
+
+      .fine-paid {
+        color: #28a745;
+      }
+
+      .fine-none {
+        color: #666;
+      }
+
+      .actions-cell {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-small {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 3px;
+      }
+
+      .pagination {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e9ecef;
+      }
+
+      .pagination-info {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .pagination-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .page-btn {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        color: #333;
+        text-decoration: none;
+        border-radius: 3px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .page-btn:hover {
+        border-color: #333;
+        background: #f8f9fa;
+      }
+
+      .page-btn.active {
+        background: #333;
+        color: #fff;
+        border-color: #333;
+      }
+
+      @media (max-width: 768px) {
+        .history-table {
+          font-size: 0.9rem;
+        }
+
+        .history-table th,
+        .history-table td {
+          padding: 0.75rem 0.5rem;
+        }
+
+        .filters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .actions-cell {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="page-title-section">
+            <h1>Issue History</h1>
+            <p>Complete transaction history of all book issues and returns</p>
+          </div>
+        </div>
+
+        <div class="stats-overview">
+          <div class="stat-card">
+            <div class="stat-number">342</div>
+            <div class="stat-label">Total Transactions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number current">89</div>
+            <div class="stat-label">Currently Issued</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number returned">245</div>
+            <div class="stat-label">Returned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number overdue">8</div>
+            <div class="stat-label">Overdue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">₹485</div>
+            <div class="stat-label">Fines Collected</div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="dateFrom">From Date</label>
+              <input type="date" id="dateFrom" value="2025-07-01" />
+            </div>
+            <div class="filter-group">
+              <label for="dateTo">To Date</label>
+              <input type="date" id="dateTo" value="2025-08-03" />
+            </div>
+            <div class="filter-group">
+              <label for="statusFilter">Status</label>
+              <select id="statusFilter">
+                <option value="all">All Transactions</option>
+                <option value="current">Currently Issued</option>
+                <option value="returned">Returned</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="memberFilter">Member</label>
+              <input
+                type="text"
+                id="memberFilter"
+                placeholder="Search member..."
+              />
+            </div>
+            <div class="filter-group">
+              <button class="btn" onclick="applyFilters()">
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="history-section">
+          <div class="section-header">
+            <h2>Transaction History</h2>
+            <span class="results-info">Showing 20 of 342 transactions</span>
+          </div>
+
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Book Details</th>
+                <th>Member</th>
+                <th>Copy ID</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Fine</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">
+                    Clean Code: A Handbook of Agile Software Craftsmanship
+                  </div>
+                  <div class="book-author">by Robert C. Martin</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">John Doe</div>
+                  <div class="member-id">LIB001234</div>
+                </td>
+                <td><strong>#004</strong></td>
+                <td class="date-cell">Aug 3, 2025</td>
+                <td class="date-cell">Aug 10, 2025</td>
+                <td class="date-cell">-</td>
+                <td>
+                  <span class="status-badge status-current">Current</span>
+                </td>
+                <td class="fine-amount fine-none">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('1')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="processReturn('1')"
+                  >
+                    Return
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">The Pragmatic Programmer</div>
+                  <div class="book-author">by Andrew Hunt & David Thomas</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Alice Smith</div>
+                  <div class="member-id">LIB001235</div>
+                </td>
+                <td><strong>#003</strong></td>
+                <td class="date-cell">Aug 1, 2025</td>
+                <td class="date-cell">Aug 8, 2025</td>
+                <td class="date-cell">-</td>
+                <td>
+                  <span class="status-badge status-current">Current</span>
+                </td>
+                <td class="fine-amount fine-none">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('2')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="processReturn('2')"
+                  >
+                    Return
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">
+                    Design Patterns: Elements of Reusable Object-Oriented
+                    Software
+                  </div>
+                  <div class="book-author">by Gang of Four</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Robert Johnson</div>
+                  <div class="member-id">LIB001025</div>
+                </td>
+                <td><strong>#007</strong></td>
+                <td class="date-cell">Jul 15, 2025</td>
+                <td class="date-cell">Jul 22, 2025</td>
+                <td class="date-cell">Aug 1, 2025</td>
+                <td>
+                  <span class="status-badge status-overdue-returned"
+                    >Late Return</span
+                  >
+                </td>
+                <td class="fine-amount fine-paid">₹50 (Paid)</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('3')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="printReceipt('3')"
+                  >
+                    Receipt
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">JavaScript: The Good Parts</div>
+                  <div class="book-author">by Douglas Crockford</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Maria Garcia</div>
+                  <div class="member-id">LIB001087</div>
+                </td>
+                <td><strong>#002</strong></td>
+                <td class="date-cell">Jul 20, 2025</td>
+                <td class="date-cell">Jul 27, 2025</td>
+                <td class="date-cell">Jul 26, 2025</td>
+                <td>
+                  <span class="status-badge status-returned">Returned</span>
+                </td>
+                <td class="fine-amount fine-none">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('4')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="printReceipt('4')"
+                  >
+                    Receipt
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">
+                    Refactoring: Improving the Design of Existing Code
+                  </div>
+                  <div class="book-author">by Martin Fowler</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">David Wilson</div>
+                  <div class="member-id">LIB001156</div>
+                </td>
+                <td><strong>#001</strong></td>
+                <td class="date-cell">Jul 15, 2025</td>
+                <td class="date-cell">Jul 22, 2025</td>
+                <td class="date-cell">Jul 20, 2025</td>
+                <td>
+                  <span class="status-badge status-returned">Returned</span>
+                </td>
+                <td class="fine-amount fine-none">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('5')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="printReceipt('5')"
+                  >
+                    Receipt
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">Code Complete</div>
+                  <div class="book-author">by Steve McConnell</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Sarah Brown</div>
+                  <div class="member-id">LIB001298</div>
+                </td>
+                <td><strong>#005</strong></td>
+                <td class="date-cell">Jul 10, 2025</td>
+                <td class="date-cell">Jul 17, 2025</td>
+                <td class="date-cell">Jul 25, 2025</td>
+                <td>
+                  <span class="status-badge status-overdue-returned"
+                    >Late Return</span
+                  >
+                </td>
+                <td class="fine-amount fine-paid">₹40 (Paid)</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('6')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="printReceipt('6')"
+                  >
+                    Receipt
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="book-info">
+                  <div class="book-title">
+                    You Don't Know JS: Scope & Closures
+                  </div>
+                  <div class="book-author">by Kyle Simpson</div>
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Michael Davis</div>
+                  <div class="member-id">LIB001345</div>
+                </td>
+                <td><strong>#008</strong></td>
+                <td class="date-cell">Jul 8, 2025</td>
+                <td class="date-cell">Jul 15, 2025</td>
+                <td class="date-cell">Jul 14, 2025</td>
+                <td>
+                  <span class="status-badge status-returned">Returned</span>
+                </td>
+                <td class="fine-amount fine-none">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewDetails('7')"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="printReceipt('7')"
+                  >
+                    Receipt
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <div class="pagination-info">Showing 1-7 of 342 transactions</div>
+            <div class="pagination-controls">
+              <a href="#" class="page-btn">Previous</a>
+              <a href="#" class="page-btn active">1</a>
+              <a href="#" class="page-btn">2</a>
+              <a href="#" class="page-btn">3</a>
+              <a href="#" class="page-btn">Next</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function applyFilters() {
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+        const statusFilter = document.getElementById("statusFilter").value;
+        const memberFilter = document.getElementById("memberFilter").value;
+
+        console.log("Applying filters:", {
+          dateFrom,
+          dateTo,
+          statusFilter,
+          memberFilter,
+        });
+        alert(
+          "Filters applied! Results would be updated.\n(Backend integration required)"
+        );
+      }
+
+      function viewDetails(transactionId) {
+        console.log("View transaction details:", transactionId);
+        alert(
+          `Opening detailed view for transaction ${transactionId}\n(Backend integration required)`
+        );
+      }
+
+      function processReturn(transactionId) {
+        console.log("Process return for transaction:", transactionId);
+        if (confirm(`Process return for transaction ${transactionId}?`)) {
+          window.location.href = `return-book.html?transaction=${transactionId}`;
+        }
+      }
+
+      function printReceipt(transactionId) {
+        console.log("Print receipt for transaction:", transactionId);
+        alert(
+          `Generating receipt for transaction ${transactionId}\n(Backend integration required)`
+        );
+      }
+    </script>
+  </body>
+</html>

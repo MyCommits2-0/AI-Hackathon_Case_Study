@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Book - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .form-container {
+        background: #fff;
+        padding: 3rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .form-header h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-header p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .form-section h2 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .required {
+        color: #dc3545;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        font-family: inherit;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: #aaa;
+      }
+
+      .help-text {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.3rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #333;
+        background: #333;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
+        display: inline-block;
+      }
+
+      .btn:hover {
+        background: #555;
+        border-color: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e9ecef;
+      }
+
+      .copy-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        margin-top: 1rem;
+      }
+
+      .copy-section h3 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .copy-options {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .radio-group input[type="radio"] {
+        width: auto;
+        margin: 0;
+      }
+
+      .dynamic-copies {
+        display: none;
+      }
+
+      .dynamic-copies.show {
+        display: block;
+      }
+
+      .copy-inputs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .error-message {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 0.75rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .success-message {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 0.75rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+          flex-direction: column;
+        }
+
+        .copy-options {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="books-catalog.html" class="back-link">← Back to Catalog</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="form-container">
+          <div class="form-header">
+            <h1>Add New Book</h1>
+            <p>Register a new book title in the library system</p>
+          </div>
+
+          <div class="error-message" id="errorMessage"></div>
+          <div class="success-message" id="successMessage"></div>
+
+          <form id="addBookForm">
+            <div class="form-section">
+              <h2>Book Information</h2>
+
+              <div class="form-group">
+                <label for="bookTitle"
+                  >Book Title <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="bookTitle"
+                  name="bookTitle"
+                  placeholder="Enter the complete book title"
+                  required
+                />
+                <div class="help-text">
+                  Enter the full title as it appears on the book cover
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="author"
+                    >Author <span class="required">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="author"
+                    name="author"
+                    placeholder="Author name(s)"
+                    required
+                  />
+                  <div class="help-text">
+                    For multiple authors, separate with commas
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="subject"
+                    >Subject <span class="required">*</span></label
+                  >
+                  <select id="subject" name="subject" required>
+                    <option value="">Select Subject</option>
+                    <option value="programming">Programming</option>
+                    <option value="science">Science</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="literature">Literature</option>
+                    <option value="history">History</option>
+                    <option value="philosophy">Philosophy</option>
+                    <option value="business">Business</option>
+                    <option value="arts">Arts</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="isbn">ISBN <span class="required">*</span></label>
+                  <input
+                    type="text"
+                    id="isbn"
+                    name="isbn"
+                    placeholder="978-XXXXXXXXX"
+                    required
+                  />
+                  <div class="help-text">
+                    13-digit ISBN number (including hyphens)
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="price"
+                    >Price (₹) <span class="required">*</span></label
+                  >
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                  <div class="help-text">Book purchase price in rupees</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Description (Optional)</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  placeholder="Brief description or summary of the book..."
+                ></textarea>
+                <div class="help-text">
+                  Optional book summary or description for library records
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2>Initial Copies</h2>
+
+              <div class="copy-section">
+                <h3>How many copies would you like to add initially?</h3>
+
+                <div class="copy-options">
+                  <div class="radio-group">
+                    <input
+                      type="radio"
+                      id="addLater"
+                      name="copyOption"
+                      value="later"
+                      checked
+                    />
+                    <label for="addLater">Add copies later</label>
+                  </div>
+                  <div class="radio-group">
+                    <input
+                      type="radio"
+                      id="addNow"
+                      name="copyOption"
+                      value="now"
+                    />
+                    <label for="addNow">Add copies now</label>
+                  </div>
+                </div>
+
+                <div class="dynamic-copies" id="copyInputs">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="copyCount">Number of Copies</label>
+                      <input
+                        type="number"
+                        id="copyCount"
+                        name="copyCount"
+                        min="1"
+                        max="20"
+                        value="1"
+                      />
+                      <div class="help-text">
+                        How many physical copies to add (1-20)
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="defaultRack">Default Rack Location</label>
+                      <select id="defaultRack" name="defaultRack">
+                        <option value="">Select Rack</option>
+                        <option value="1">Rack 1</option>
+                        <option value="2">Rack 2</option>
+                        <option value="3">Rack 3</option>
+                        <option value="4">Rack 4</option>
+                        <option value="5">Rack 5</option>
+                        <option value="6">Rack 6</option>
+                        <option value="7">Rack 7</option>
+                        <option value="8">Rack 8</option>
+                      </select>
+                      <div class="help-text">
+                        Rack where copies will be placed
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn">Add Book to Library</button>
+              <a href="books-catalog.html" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Handle copy option toggle
+      document.querySelectorAll('input[name="copyOption"]').forEach((radio) => {
+        radio.addEventListener("change", function () {
+          const copyInputs = document.getElementById("copyInputs");
+          if (this.value === "now") {
+            copyInputs.classList.add("show");
+          } else {
+            copyInputs.classList.remove("show");
+          }
+        });
+      });
+
+      // Form validation and submission
+      document
+        .getElementById("addBookForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const errorMessage = document.getElementById("errorMessage");
+          const successMessage = document.getElementById("successMessage");
+
+          // Reset messages
+          errorMessage.style.display = "none";
+          successMessage.style.display = "none";
+
+          // Get form data
+          const formData = {
+            bookTitle: document.getElementById("bookTitle").value.trim(),
+            author: document.getElementById("author").value.trim(),
+            subject: document.getElementById("subject").value,
+            isbn: document.getElementById("isbn").value.trim(),
+            price: parseFloat(document.getElementById("price").value),
+            description: document.getElementById("description").value.trim(),
+            copyOption: document.querySelector(
+              'input[name="copyOption"]:checked'
+            ).value,
+            copyCount: document.getElementById("copyCount").value,
+            defaultRack: document.getElementById("defaultRack").value,
+          };
+
+          // Basic validation
+          if (
+            !formData.bookTitle ||
+            !formData.author ||
+            !formData.subject ||
+            !formData.isbn ||
+            !formData.price
+          ) {
+            errorMessage.textContent = "Please fill in all required fields.";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          // ISBN validation (basic format check)
+          const isbnPattern = /^978-\d{10}$/;
+          if (!isbnPattern.test(formData.isbn)) {
+            errorMessage.textContent =
+              "Please enter a valid ISBN in format: 978-XXXXXXXXX";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          // Price validation
+          if (formData.price <= 0) {
+            errorMessage.textContent = "Price must be greater than 0.";
+            errorMessage.style.display = "block";
+            return;
+          }
+
+          // Copy validation if adding now
+          if (formData.copyOption === "now") {
+            if (!formData.copyCount || !formData.defaultRack) {
+              errorMessage.textContent =
+                "Please specify copy count and rack location.";
+              errorMessage.style.display = "block";
+              return;
+            }
+          }
+
+          // Success simulation
+          console.log("Book data to be submitted:", formData);
+          successMessage.textContent = `Book "${formData.bookTitle}" has been successfully added to the library!`;
+          successMessage.style.display = "block";
+
+          // Reset form after success
+          setTimeout(() => {
+            if (
+              confirm(
+                "Book added successfully! Would you like to add another book?"
+              )
+            ) {
+              this.reset();
+              document.getElementById("copyInputs").classList.remove("show");
+              successMessage.style.display = "none";
+            } else {
+              window.location.href = "books-catalog.html";
+            }
+          }, 1500);
+        });
+
+      // Real-time ISBN formatting
+      document.getElementById("isbn").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/[^\d]/g, "");
+        if (value.length >= 3) {
+          value = "978-" + value.substring(3);
+        }
+        e.target.value = value;
+      });
+
+      // Real-time price validation
+      document.getElementById("price").addEventListener("input", function (e) {
+        const value = parseFloat(e.target.value);
+        if (value < 0) {
+          e.target.value = 0;
+        }
+      });
+    </script>
+  </body>
+</html>

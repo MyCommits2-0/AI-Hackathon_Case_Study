@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Return Book - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-header p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .return-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .return-form {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-section h2 {
+        color: #333;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .required {
+        color: #dc3545;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .search-results {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        background: #fff;
+        display: none;
+      }
+
+      .search-result-item {
+        padding: 0.75rem;
+        border-bottom: 1px solid #e9ecef;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .search-result-item:hover {
+        background: #f8f9fa;
+      }
+
+      .search-result-item:last-child {
+        border-bottom: none;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .issue-details {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .issue-info {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        margin-bottom: 1.5rem;
+        display: none;
+      }
+
+      .issue-info.show {
+        display: block;
+      }
+
+      .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .info-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .status-ontime {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-due {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status-overdue {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .info-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.2rem;
+      }
+
+      .detail-value {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .fine-calculation {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: none;
+      }
+
+      .fine-calculation.show {
+        display: block;
+      }
+
+      .fine-calculation h3 {
+        color: #856404;
+        margin-bottom: 1rem;
+      }
+
+      .calc-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #f0e68c;
+      }
+
+      .calc-row:last-child {
+        border-bottom: 2px solid #856404;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+
+      .return-summary {
+        background: #e9ecef;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: none;
+      }
+
+      .return-summary.show {
+        display: block;
+      }
+
+      .return-summary h3 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+      }
+
+      .error-message {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 0.75rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .success-message {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 0.75rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .return-container {
+          grid-template-columns: 1fr;
+        }
+
+        .info-details {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <h1>Return Book</h1>
+          <p>Process book returns and calculate fines</p>
+        </div>
+
+        <div class="return-container">
+          <div class="return-form">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <form id="returnForm">
+              <div class="form-section">
+                <h2>Find Issued Book</h2>
+
+                <div class="form-group">
+                  <label for="searchMethod">Search Method</label>
+                  <select id="searchMethod">
+                    <option value="member">By Member</option>
+                    <option value="book">By Book Title</option>
+                    <option value="copy">By Copy ID</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="searchQuery"
+                    >Search <span class="required">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="searchQuery"
+                    placeholder="Enter member name, book title, or copy ID..."
+                    required
+                  />
+                  <div class="search-results" id="searchResults"></div>
+                </div>
+              </div>
+
+              <div class="return-summary" id="returnSummary">
+                <h3>Return Summary</h3>
+                <div class="summary-row">
+                  <span>Return Date:</span>
+                  <span id="returnDate">August 3, 2025</span>
+                </div>
+                <div class="summary-row">
+                  <span>Days Borrowed:</span>
+                  <span id="daysBorrowed">5 days</span>
+                </div>
+                <div class="summary-row">
+                  <span>Status:</span>
+                  <span id="returnStatus">On Time</span>
+                </div>
+                <div class="summary-row">
+                  <span>Fine Amount:</span>
+                  <span id="fineAmount">₹0</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 1rem; justify-content: center">
+                <button type="submit" class="btn" id="returnButton" disabled>
+                  Process Return
+                </button>
+                <button
+                  type="reset"
+                  class="btn btn-secondary"
+                  onclick="resetForm()"
+                >
+                  Reset Form
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="issue-details">
+            <h2>Issue Details</h2>
+
+            <div class="issue-info" id="issueInfo">
+              <div class="info-header">
+                <div class="info-title">Clean Code</div>
+                <div class="status-badge status-overdue">2 Days Overdue</div>
+              </div>
+              <div class="info-details">
+                <div class="detail-item">
+                  <span class="detail-label">Member</span>
+                  <span class="detail-value">John Doe (LIB001234)</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Author</span>
+                  <span class="detail-value">Robert C. Martin</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Copy ID</span>
+                  <span class="detail-value">#004</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Issue Date</span>
+                  <span class="detail-value">July 25, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Due Date</span>
+                  <span class="detail-value">August 1, 2025</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Rack Location</span>
+                  <span class="detail-value">Rack 2</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="fine-calculation" id="fineCalculation">
+              <h3>Fine Calculation</h3>
+              <div class="calc-row">
+                <span>Due Date:</span>
+                <span>August 1, 2025</span>
+              </div>
+              <div class="calc-row">
+                <span>Return Date:</span>
+                <span>August 3, 2025</span>
+              </div>
+              <div class="calc-row">
+                <span>Days Overdue:</span>
+                <span>2 days</span>
+              </div>
+              <div class="calc-row">
+                <span>Fine Rate:</span>
+                <span>₹5 per day</span>
+              </div>
+              <div class="calc-row">
+                <span>Total Fine:</span>
+                <span style="color: #dc3545">₹10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let selectedIssue = null;
+
+      // Mock issued books data
+      const mockIssuedBooks = [
+        {
+          id: 1,
+          member: { id: 1234, name: "John Doe" },
+          book: {
+            name: "Clean Code",
+            author: "Robert C. Martin",
+            copyId: "004",
+          },
+          issueDate: "2025-07-25",
+          dueDate: "2025-08-01",
+          status: "overdue",
+        },
+        {
+          id: 2,
+          member: { id: 1235, name: "Alice Smith" },
+          book: {
+            name: "The Pragmatic Programmer",
+            author: "Andrew Hunt",
+            copyId: "003",
+          },
+          issueDate: "2025-08-01",
+          dueDate: "2025-08-08",
+          status: "ontime",
+        },
+      ];
+
+      document
+        .getElementById("searchQuery")
+        .addEventListener("input", function () {
+          const query = this.value.toLowerCase();
+          const method = document.getElementById("searchMethod").value;
+          const resultsDiv = document.getElementById("searchResults");
+
+          if (query.length < 2) {
+            resultsDiv.style.display = "none";
+            return;
+          }
+
+          const filtered = mockIssuedBooks.filter((issue) => {
+            switch (method) {
+              case "member":
+                return (
+                  issue.member.name.toLowerCase().includes(query) ||
+                  issue.member.id.toString().includes(query)
+                );
+              case "book":
+                return (
+                  issue.book.name.toLowerCase().includes(query) ||
+                  issue.book.author.toLowerCase().includes(query)
+                );
+              case "copy":
+                return issue.book.copyId.includes(query);
+              default:
+                return false;
+            }
+          });
+
+          if (filtered.length > 0) {
+            resultsDiv.innerHTML = filtered
+              .map(
+                (issue) =>
+                  `<div class="search-result-item" onclick="selectIssue(${issue.id})">
+                        ${issue.book.name} - ${issue.member.name} (Copy #${issue.book.copyId})
+                        <br><small>Issued: ${issue.issueDate} | Due: ${issue.dueDate}</small>
+                    </div>`
+              )
+              .join("");
+            resultsDiv.style.display = "block";
+          } else {
+            resultsDiv.innerHTML =
+              '<div class="search-result-item">No issued books found</div>';
+            resultsDiv.style.display = "block";
+          }
+        });
+
+      function selectIssue(issueId) {
+        selectedIssue = mockIssuedBooks.find((issue) => issue.id === issueId);
+
+        document.getElementById(
+          "searchQuery"
+        ).value = `${selectedIssue.book.name} - ${selectedIssue.member.name} (Copy #${selectedIssue.book.copyId})`;
+        document.getElementById("searchResults").style.display = "none";
+
+        // Show issue details
+        document.getElementById("issueInfo").classList.add("show");
+        document.getElementById("returnSummary").classList.add("show");
+
+        // Calculate return details
+        const issueDate = new Date(selectedIssue.issueDate);
+        const dueDate = new Date(selectedIssue.dueDate);
+        const returnDate = new Date();
+        const daysBorrowed = Math.ceil(
+          (returnDate - issueDate) / (1000 * 60 * 60 * 24)
+        );
+        const daysOverdue = Math.max(
+          0,
+          Math.ceil((returnDate - dueDate) / (1000 * 60 * 60 * 24))
+        );
+        const fineAmount = daysOverdue * 5;
+
+        // Update summary
+        document.getElementById("returnDate").textContent =
+          returnDate.toLocaleDateString("en-GB");
+        document.getElementById(
+          "daysBorrowed"
+        ).textContent = `${daysBorrowed} days`;
+        document.getElementById("returnStatus").textContent =
+          daysOverdue > 0 ? `${daysOverdue} days overdue` : "On Time";
+        document.getElementById("fineAmount").textContent = `₹${fineAmount}`;
+
+        // Show fine calculation if overdue
+        if (daysOverdue > 0) {
+          document.getElementById("fineCalculation").classList.add("show");
+          document.getElementById("returnStatus").style.color = "#dc3545";
+        } else {
+          document.getElementById("fineCalculation").classList.remove("show");
+          document.getElementById("returnStatus").style.color = "#28a745";
+        }
+
+        document.getElementById("returnButton").disabled = false;
+      }
+
+      function resetForm() {
+        selectedIssue = null;
+        document.getElementById("issueInfo").classList.remove("show");
+        document.getElementById("returnSummary").classList.remove("show");
+        document.getElementById("fineCalculation").classList.remove("show");
+        document.getElementById("searchResults").style.display = "none";
+        document.getElementById("returnButton").disabled = true;
+        hideMessages();
+      }
+
+      function showError(message) {
+        document.getElementById("errorMessage").textContent = message;
+        document.getElementById("errorMessage").style.display = "block";
+        document.getElementById("successMessage").style.display = "none";
+      }
+
+      function showSuccess(message) {
+        document.getElementById("successMessage").textContent = message;
+        document.getElementById("successMessage").style.display = "block";
+        document.getElementById("errorMessage").style.display = "none";
+      }
+
+      function hideMessages() {
+        document.getElementById("errorMessage").style.display = "none";
+        document.getElementById("successMessage").style.display = "none";
+      }
+
+      document
+        .getElementById("returnForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (selectedIssue) {
+            const fineAmount = parseInt(
+              document.getElementById("fineAmount").textContent.replace("₹", "")
+            );
+
+            console.log("Process return:", {
+              issue: selectedIssue,
+              returnDate: new Date(),
+              fineAmount: fineAmount,
+            });
+
+            let message = `Book "${selectedIssue.book.name}" returned successfully!`;
+            if (fineAmount > 0) {
+              message += ` Fine collected: ₹${fineAmount}`;
+            }
+
+            showSuccess(message);
+
+            setTimeout(() => {
+              if (
+                confirm("Book returned successfully! Process another return?")
+              ) {
+                resetForm();
+              } else {
+                window.location.href = "librarian-dashboard.html";
+              }
+            }, 2000);
+          }
+        });
+
+      // Hide search results when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".form-group")) {
+          document.getElementById("searchResults").style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

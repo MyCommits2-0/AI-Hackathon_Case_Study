@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Payment Status - Library Management System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .back-link {
+        color: #333;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        border-color: #333;
+      }
+
+      .main-content {
+        padding: 2rem 0;
+      }
+
+      .page-header {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .page-title-section h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-title-section p {
+        color: #666;
+        font-size: 1.1rem;
+      }
+
+      .status-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .status-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .status-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .status-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .paid {
+        color: #28a745;
+      }
+
+      .due {
+        color: #ffc107;
+      }
+
+      .overdue {
+        color: #dc3545;
+      }
+
+      .filters-section {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+      }
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .filter-group label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .filter-group input,
+      .filter-group select {
+        padding: 0.6rem;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-group input:focus,
+      .filter-group select:focus {
+        outline: none;
+        border-color: #333;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #555;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #333;
+        border: 2px solid #333;
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+        color: #fff;
+      }
+
+      .members-section {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        color: #333;
+      }
+
+      .results-info {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .members-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .members-table th,
+      .members-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .members-table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .members-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .members-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .member-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .member-name {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.2rem;
+      }
+
+      .member-email {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .payment-status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .status-current {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-due-soon {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status-overdue {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .amount-cell {
+        font-weight: 500;
+        text-align: right;
+      }
+
+      .amount-due {
+        color: #dc3545;
+      }
+
+      .amount-paid {
+        color: #28a745;
+      }
+
+      .date-cell {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .actions-cell {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-small {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        border-radius: 3px;
+      }
+
+      .btn-collect {
+        background: #dc3545;
+        color: #fff;
+      }
+
+      .btn-collect:hover {
+        background: #c82333;
+      }
+
+      .priority-overdue {
+        background: #fff5f5 !important;
+        border-left: 4px solid #dc3545;
+      }
+
+      .priority-due {
+        background: #fffbf0 !important;
+        border-left: 4px solid #ffc107;
+      }
+
+      .bulk-actions {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e9ecef;
+        background: #f8f9fa;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .bulk-actions input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      .bulk-actions select {
+        padding: 0.4rem;
+        border: 1px solid #e9ecef;
+        border-radius: 3px;
+        margin-right: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .members-table {
+          font-size: 0.9rem;
+        }
+
+        .members-table th,
+        .members-table td {
+          padding: 0.75rem 0.5rem;
+        }
+
+        .filters-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .actions-cell {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">Library Management System</div>
+          <a href="librarian-dashboard.html" class="back-link"
+            >← Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="page-header">
+          <div class="page-title-section">
+            <h1>Member Payment Status</h1>
+            <p>Monitor and manage payment status of all library members</p>
+          </div>
+        </div>
+
+        <div class="status-overview">
+          <div class="status-card">
+            <div class="status-number">45</div>
+            <div class="status-label">Total Members</div>
+          </div>
+          <div class="status-card">
+            <div class="status-number paid">32</div>
+            <div class="status-label">Payment Current</div>
+          </div>
+          <div class="status-card">
+            <div class="status-number due">8</div>
+            <div class="status-label">Payment Due Soon</div>
+          </div>
+          <div class="status-card">
+            <div class="status-number overdue">5</div>
+            <div class="status-label">Payment Overdue</div>
+          </div>
+          <div class="status-card">
+            <div class="status-number">₹2,500</div>
+            <div class="status-label">Outstanding Amount</div>
+          </div>
+        </div>
+
+        <div class="filters-section">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="statusFilter">Payment Status</label>
+              <select id="statusFilter">
+                <option value="all">All Members</option>
+                <option value="current">Payment Current</option>
+                <option value="due">Due Soon (within 7 days)</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="memberSearch">Search Member</label>
+              <input
+                type="text"
+                id="memberSearch"
+                placeholder="Name, email, or ID..."
+              />
+            </div>
+            <div class="filter-group">
+              <label for="joinDateFilter">Member Since</label>
+              <select id="joinDateFilter">
+                <option value="all">All Time</option>
+                <option value="thisyear">This Year</option>
+                <option value="lastmonth">Last Month</option>
+                <option value="thismonth">This Month</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <button class="btn" onclick="applyFilters()">
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="members-section">
+          <div class="section-header">
+            <h2>Member Payment Status</h2>
+            <span class="results-info">45 total members</span>
+          </div>
+
+          <div class="bulk-actions">
+            <input
+              type="checkbox"
+              id="selectAll"
+              onchange="toggleSelectAll()"
+            />
+            <label for="selectAll">Select All</label>
+            <select id="bulkAction">
+              <option value="">Bulk Actions</option>
+              <option value="sendReminder">Send Payment Reminder</option>
+              <option value="markPaid">Mark as Paid</option>
+              <option value="exportList">Export Selected</option>
+            </select>
+            <button
+              class="btn btn-secondary btn-small"
+              onclick="executeBulkAction()"
+            >
+              Execute
+            </button>
+          </div>
+
+          <table class="members-table">
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>Member Details</th>
+                <th>Member ID</th>
+                <th>Last Payment</th>
+                <th>Next Due Date</th>
+                <th>Status</th>
+                <th>Amount Due</th>
+                <th>Outstanding Fines</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="priority-overdue">
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1025" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Robert Johnson</div>
+                  <div class="member-email">robert.j@email.com</div>
+                </td>
+                <td><strong>LIB001025</strong></td>
+                <td class="date-cell">Jun 3, 2025</td>
+                <td class="date-cell" style="color: #dc3545">
+                  Jul 3, 2025 (Overdue)
+                </td>
+                <td>
+                  <span class="payment-status-badge status-overdue"
+                    >Overdue</span
+                  >
+                </td>
+                <td class="amount-cell amount-due">₹500</td>
+                <td class="amount-cell amount-due">₹140</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectPayment('1025')"
+                  >
+                    Collect
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="sendReminder('1025')"
+                  >
+                    Remind
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-overdue">
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1087" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Maria Garcia</div>
+                  <div class="member-email">maria.garcia@email.com</div>
+                </td>
+                <td><strong>LIB001087</strong></td>
+                <td class="date-cell">Jun 20, 2025</td>
+                <td class="date-cell" style="color: #dc3545">
+                  Jul 20, 2025 (Overdue)
+                </td>
+                <td>
+                  <span class="payment-status-badge status-overdue"
+                    >Overdue</span
+                  >
+                </td>
+                <td class="amount-cell amount-due">₹500</td>
+                <td class="amount-cell amount-due">₹80</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectPayment('1087')"
+                  >
+                    Collect
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="sendReminder('1087')"
+                  >
+                    Remind
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-due">
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1156" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">David Wilson</div>
+                  <div class="member-email">david.wilson@email.com</div>
+                </td>
+                <td><strong>LIB001156</strong></td>
+                <td class="date-cell">Jul 15, 2025</td>
+                <td class="date-cell" style="color: #ffc107">Aug 15, 2025</td>
+                <td>
+                  <span class="payment-status-badge status-due-soon"
+                    >Due Soon</span
+                  >
+                </td>
+                <td class="amount-cell amount-due">₹500</td>
+                <td class="amount-cell">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectPayment('1156')"
+                  >
+                    Collect
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewHistory('1156')"
+                  >
+                    History
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-due">
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1298" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Sarah Brown</div>
+                  <div class="member-email">sarah.brown@email.com</div>
+                </td>
+                <td><strong>LIB001298</strong></td>
+                <td class="date-cell">Jul 28, 2025</td>
+                <td class="date-cell" style="color: #ffc107">Aug 28, 2025</td>
+                <td>
+                  <span class="payment-status-badge status-due-soon"
+                    >Due Soon</span
+                  >
+                </td>
+                <td class="amount-cell amount-due">₹500</td>
+                <td class="amount-cell">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectPayment('1298')"
+                  >
+                    Collect
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewHistory('1298')"
+                  >
+                    History
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1234" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">John Doe</div>
+                  <div class="member-email">john.doe@email.com</div>
+                </td>
+                <td><strong>LIB001234</strong></td>
+                <td class="date-cell">Jul 30, 2025</td>
+                <td class="date-cell" style="color: #28a745">Aug 30, 2025</td>
+                <td>
+                  <span class="payment-status-badge status-current"
+                    >Current</span
+                  >
+                </td>
+                <td class="amount-cell">₹0</td>
+                <td class="amount-cell">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewHistory('1234')"
+                  >
+                    History
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewProfile('1234')"
+                  >
+                    Profile
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1235" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Alice Smith</div>
+                  <div class="member-email">alice.smith@email.com</div>
+                </td>
+                <td><strong>LIB001235</strong></td>
+                <td class="date-cell">Jul 28, 2025</td>
+                <td class="date-cell" style="color: #28a745">Aug 28, 2025</td>
+                <td>
+                  <span class="payment-status-badge status-current"
+                    >Current</span
+                  >
+                </td>
+                <td class="amount-cell">₹0</td>
+                <td class="amount-cell">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewHistory('1235')"
+                  >
+                    History
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="viewProfile('1235')"
+                  >
+                    Profile
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="priority-due">
+                <td>
+                  <input type="checkbox" name="memberSelect" value="1345" />
+                </td>
+                <td class="member-info">
+                  <div class="member-name">Michael Davis</div>
+                  <div class="member-email">michael.davis@email.com</div>
+                </td>
+                <td><strong>LIB001345</strong></td>
+                <td class="date-cell">Jul 5, 2025</td>
+                <td class="date-cell" style="color: #ffc107">Aug 5, 2025</td>
+                <td>
+                  <span class="payment-status-badge status-due-soon"
+                    >Due Soon</span
+                  >
+                </td>
+                <td class="amount-cell amount-due">₹500</td>
+                <td class="amount-cell">₹0</td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-collect btn-small"
+                    onclick="collectPayment('1345')"
+                  >
+                    Collect
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-small"
+                    onclick="sendReminder('1345')"
+                  >
+                    Remind
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function applyFilters() {
+        const statusFilter = document.getElementById("statusFilter").value;
+        const memberSearch = document.getElementById("memberSearch").value;
+        const joinDateFilter = document.getElementById("joinDateFilter").value;
+
+        console.log("Applying filters:", {
+          statusFilter,
+          memberSearch,
+          joinDateFilter,
+        });
+        alert(
+          "Filters applied! Results would be updated.\n(Backend integration required)"
+        );
+      }
+
+      function toggleSelectAll() {
+        const selectAll = document.getElementById("selectAll");
+        const memberCheckboxes = document.querySelectorAll(
+          'input[name="memberSelect"]'
+        );
+
+        memberCheckboxes.forEach((checkbox) => {
+          checkbox.checked = selectAll.checked;
+        });
+      }
+
+      function executeBulkAction() {
+        const bulkAction = document.getElementById("bulkAction").value;
+        const selectedMembers = document.querySelectorAll(
+          'input[name="memberSelect"]:checked'
+        );
+
+        if (!bulkAction) {
+          alert("Please select an action");
+          return;
+        }
+
+        if (selectedMembers.length === 0) {
+          alert("Please select at least one member");
+          return;
+        }
+
+        const memberIds = Array.from(selectedMembers).map((cb) => cb.value);
+        console.log("Bulk action:", bulkAction, "for members:", memberIds);
+
+        switch (bulkAction) {
+          case "sendReminder":
+            alert(
+              `Sending payment reminders to ${memberIds.length} members\n(Backend integration required)`
+            );
+            break;
+          case "markPaid":
+            alert(
+              `Marking ${memberIds.length} members as paid\n(Backend integration required)`
+            );
+            break;
+          case "exportList":
+            alert(
+              `Exporting ${memberIds.length} member records\n(Backend integration required)`
+            );
+            break;
+        }
+      }
+
+      function collectPayment(memberId) {
+        console.log("Collect payment for member:", memberId);
+        if (confirm(`Open payment collection for member ${memberId}?`)) {
+          window.location.href = `collect-payment.html?member=${memberId}`;
+        }
+      }
+
+      function sendReminder(memberId) {
+        console.log("Send reminder to member:", memberId);
+        if (confirm(`Send payment reminder to member ${memberId}?`)) {
+          alert(
+            `Payment reminder sent to member ${memberId}\n(Backend integration required)`
+          );
+        }
+      }
+
+      function viewHistory(memberId) {
+        console.log("View payment history for member:", memberId);
+        alert(
+          `Opening payment history for member ${memberId}\n(Backend integration required)`
+        );
+      }
+
+      function viewProfile(memberId) {
+        console.log("View profile for member:", memberId);
+        alert(
+          `Opening profile for member ${memberId}\n(Backend integration required)`
+        );
+      }
+
+      // Auto-refresh data every 10 minutes
+      setInterval(function () {
+        console.log("Refreshing member payment status...");
+        // This would update the payment status in real implementation
+      }, 600000);
+    </script>
+  </body>
+</html>
