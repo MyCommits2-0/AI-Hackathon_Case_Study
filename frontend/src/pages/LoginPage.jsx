@@ -37,7 +37,7 @@ const LoginPage = () => {
       } else if (data.user.role === 'owner') {
         navigate('/owner-dashboard');
       } else {
-        navigate('/member-dashboard');
+        navigate('/');
       }
 
     } catch (err) {
